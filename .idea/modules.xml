@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/command_recognition.iml" filepath="$PROJECT_DIR$/.idea/command_recognition.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../tensorflow/tensorflow/examples/speech_commands/.idea/speech_commands.iml" filepath="$PROJECT_DIR$/../tensorflow/tensorflow/examples/speech_commands/.idea/speech_commands.iml" />
     </modules>
   </component>
 </project>
