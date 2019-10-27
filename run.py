@@ -1,18 +1,15 @@
 import os
 import sys
-import struct
 import wave
+import struct
 import tempfile
 
-import tensorflow as tf
 import pyaudio
-from six.moves import queue
-import matplotlib.pyplot as plt
 import numpy as np
+import tensorflow as tf
 
 import defaultfiles as default
 sys.path.append(default.tensorflow_examples_speech_commands_dir)
-
 from label_wav import load_graph, load_labels
 
 
@@ -54,6 +51,62 @@ class CommandRecognizer:
         pa.terminate()
 
 
+    def open_audio_stream(self, input_device_index):
+        self._audio_interface = pyaudio.PyAudio()
+        audio_stream = self._audio_interface.open(
+            rate=self._rate,
+            channels=self._channels,
+            format=self._format,
+            input=True,
+            frames_per_buffer=self._chunk,
+            input_device_index=input_device_index)
+        return audio_stream
+
+
+    def close_audio_stream(self, audio_stream):
+        audio_stream.stop_stream()
+        audio_stream.close()
+        #self.closed = True
+        # Signal the generator to terminate so that the client's
+        # streaming_recognize method will not block the process termination.
+        #self._buff.put(None)
+        self._audio_interface.terminate()
+
+
+    def record_audio(self, audio_stream, record_seconds):
+        buf = []
+        for i in range(0, int(self._rate / self._chunk * record_seconds)):
+            buf_ = audio_stream.read(self._chunk, exception_on_overflow=False)
+            buf.append(buf_)
+        return buf
+
+
+    def buf2pcm(self, buf):
+        pcm = []
+        for i in buf:
+            pcm_ = struct.unpack_from("h" * self._chunk, i)
+            pcm.extend(list(pcm_))
+        return pcm
+
+
+    def pcm2buf(self, pcm):
+        return [struct.pack("h" * len(pcm), *pcm)]
+
+
+    def VAD(self, pcm, frame_seconds=1, shift_seconds=0.01):
+        frame_size = self._rate * self._channels * frame_seconds
+        shift_size = int(frame_size * shift_seconds / frame_seconds)
+
+        frame_start = 0
+        rms = 0
+        for i in range(0, len(pcm)-frame_size, shift_size):
+            pcm_ = np.array(pcm[i:i+frame_size])
+            if np.mean(pcm_**2) > rms:
+                frame_start = i
+
+        return pcm[frame_start:frame_start+frame_size]
+
+
     def predict_labels(self, wav_data):
         with tf.Session() as sess:
             # Feed the audio data as input to the graph.
@@ -85,32 +138,6 @@ class CommandRecognizer:
         waveFile.close()
 
 
-    def buf2pcm(self, buf):
-        pcm = []
-        for i in buf:
-            pcm_ = struct.unpack_from("h" * self._chunk, i)
-            pcm.extend(list(pcm_))
-        return pcm
-
-
-    def pcm2buf(self, pcm):
-        return [struct.pack("h" * len(pcm), *pcm)]
-
-
-    def VAD(self, pcm, frame_seconds=1, shift_seconds=0.01):
-        frame_size = self._rate * self._channels * frame_seconds
-        shift_size = int(frame_size * shift_seconds / frame_seconds)
-
-        frame_start = 0
-        rms = 0
-        for i in range(0, len(pcm)-frame_size, shift_size):
-            pcm_ = np.array(pcm[i:i+frame_size])
-            if np.mean(pcm_**2) > rms:
-                frame_start = i
-
-        return pcm[frame_start:frame_start+frame_size]
-
-
     def label_buf(self, buf):
         # convert buf into pcm (amplitude).
         pcm  = self.buf2pcm(buf)
@@ -133,35 +160,6 @@ class CommandRecognizer:
         # remove temporary file.
         os.remove(wav_file.name)
 
-
-    def open_audio_stream(self, input_device_index):
-        self._audio_interface = pyaudio.PyAudio()
-        audio_stream = self._audio_interface.open(
-            rate=self._rate,
-            channels=self._channels,
-            format=self._format,
-            input=True,
-            frames_per_buffer=self._chunk,
-            input_device_index=input_device_index)
-        return audio_stream
-
-
-    def close_audio_stream(self, audio_stream):
-        audio_stream.stop_stream()
-        audio_stream.close()
-        #self.closed = True
-        # Signal the generator to terminate so that the client's
-        # streaming_recognize method will not block the process termination.
-        #self._buff.put(None)
-        self._audio_interface.terminate()
-
-
-    def record_audio(self, audio_stream, record_seconds):
-        buf = []
-        for i in range(0, int(self._rate / self._chunk * record_seconds)):
-            buf_ = audio_stream.read(self._chunk, exception_on_overflow=False)
-            buf.append(buf_)
-        return buf
 
 
 if __name__ == '__main__':
