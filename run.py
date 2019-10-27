@@ -7,6 +7,7 @@ import tensorflow as tf
 import pyaudio
 from six.moves import queue
 import matplotlib.pyplot as plt
+import numpy as np
 
 import defaultfiles as default
 sys.path.append(default.tensorflow_examples_speech_commands_dir)
@@ -87,6 +88,32 @@ class CommandRecognizer:
         waveFile.close()
 
 
+    def buf2pcm(self, buf):
+        pcm = []
+        for i in buf:
+            pcm_ = struct.unpack_from("h" * CHUNK, i)
+            pcm.extend(list(pcm_))
+        return pcm
+
+
+    def pcm2buf(self, pcm):
+        return [struct.pack("h" * len(pcm), *pcm)]
+
+
+    def VAD(self, pcm, frame_seconds=1, shift_seconds=0.01):
+        frame_size = self._rate * self._channels * frame_seconds
+        shift_size = int(frame_size * shift_seconds / frame_seconds)
+
+        frame_start = 0
+        rms = 0
+        for i in range(0, len(pcm)-frame_size, shift_size):
+            pcm_ = np.array(pcm[i:i+frame_size])
+            if np.mean(pcm_**2) > rms:
+                frame_start = i
+
+        return pcm[frame_start:frame_start+frame_size]
+
+
 class MicrophoneStream(object):
 
     def __enter__(self):
@@ -154,7 +181,7 @@ if __name__ == '__main__':
     #    audio_generator = stream.generator()
     FORMAT = pyaudio.paInt16
     RECORD_SECONDS = 2
-    INPUT_DEVICE_INDEX = 7
+    INPUT_DEVICE_INDEX = 6
     CHANNELS = 1
 
     pa = pyaudio.PyAudio()
@@ -169,31 +196,25 @@ if __name__ == '__main__':
     print('recording...')
 
     #while stream.is_active():
-    frames = []
+    buf = []
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        pcm = stream.read(CHUNK)
-        frames.append(pcm)
+        buf_ = stream.read(CHUNK)
+        buf.append(buf_)
 
     stream.stop_stream()
     stream.close()
     pa.terminate()
 
     # get amplitude of the signal.
-    pcm = []
-    for i in frames:
-        pcm_ = struct.unpack_from("h" * CHUNK, i)
-        pcm.extend(list(pcm_))
+    pcm = cr.buf2pcm(buf)
 
-    wav_file = 'sample.wav'
+    #wav_file = 'sample.wav'
     #wav_file = r'/home/aki/Data/speech_dataset/left/a5d485dc_nohash_0.wav'
-    cr.save_to_wav(frames, wav_file)
+    #cr.save_to_wav(buf, wav_file)
 
     wav_file2 = 'sample2.wav'
-    CUT_SECONDS = 1
-    cut_points = RATE * CHANNELS * CUT_SECONDS
-    pcm2 = pcm[cut_points:cut_points*2]
-    frames2 = [struct.pack("h" * len(pcm2), *pcm2)]
-    cr.save_to_wav(frames2, wav_file2)
-
+    pcm2 = cr.VAD(pcm)
+    buf2 = cr.pcm2buf(pcm2)
+    cr.save_to_wav(buf2, wav_file2)
     cr.label_wav_file(wav_file2)
     print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
