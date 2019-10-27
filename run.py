@@ -1,7 +1,12 @@
 import os
 import sys
+#import struct
+import wave
 
 import tensorflow as tf
+import pyaudio
+from six.moves import queue
+import matplotlib.pyplot as plt
 
 import defaultfiles as default
 sys.path.append(default.tensorflow_examples_speech_commands_dir)
@@ -25,6 +30,18 @@ class CommandRecognizer:
         self.ranking = []
 
 
+    def show_audio_devices_info(self):
+        """ Provides information regarding different audio devices available.
+        reference:
+            {porcupine}/demo/python/porcupine_demo.py
+        """
+        pa = pyaudio.PyAudio()
+        for i in range(pa.get_device_count()):
+            info = pa.get_device_info_by_index(i)
+            print('{0:2}: {1}'.format(info['index'], info['name']))
+        pa.terminate()
+
+
     def predict_labels(self, wav_data):
         with tf.Session() as sess:
             # Feed the audio data as input to the graph.
@@ -41,14 +58,118 @@ class CommandRecognizer:
     def label_wav_file(self, wav_file):
         if not wav_file or not tf.gfile.Exists(wav_file):
             tf.logging.fatal('wav file does not exist %s', wav_file)
-        with open(wav_file, 'rb') as wav:
-            wav_data = wav.read()
-        self.predict_labels(wav_data)
+        else:
+            with open(wav_file, 'rb') as wav:
+                wav_data = wav.read()
+            self.predict_labels(wav_data)
+
+
+class MicrophoneStream(object):
+    """Opens a recording stream as a generator yielding the audio chunks."""
+    def __init__(self, rate, chunk):
+        self._rate = rate
+        self._chunk = chunk
+
+        # Create a thread-safe buffer of audio data
+        self._buff = queue.Queue()
+        self.closed = True
+
+    def __enter__(self):
+        self._audio_interface = pyaudio.PyAudio()
+        self._audio_stream = self._audio_interface.open(
+            format=pyaudio.paInt16,
+            # The API currently only supports 1-channel (mono) audio
+            # https://goo.gl/z757pE
+            channels=1, rate=self._rate,
+            input=True, frames_per_buffer=self._chunk,
+            # Run the audio stream asynchronously to fill the buffer object.
+            # This is necessary so that the input device's buffer doesn't
+            # overflow while the calling thread makes network requests, etc.
+            stream_callback=self._fill_buffer,
+        )
+
+        self.closed = False
+
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self._audio_stream.stop_stream()
+        self._audio_stream.close()
+        self.closed = True
+        # Signal the generator to terminate so that the client's
+        # streaming_recognize method will not block the process termination.
+        self._buff.put(None)
+        self._audio_interface.terminate()
+
+    def _fill_buffer(self, in_data, frame_count, time_info, status_flags):
+        """Continuously collect data from the audio stream, into the buffer."""
+        self._buff.put(in_data)
+        return None, pyaudio.paContinue
+
+    def generator(self):
+        while not self.closed:
+            # Use a blocking get() to ensure there's at least one chunk of
+            # data, and stop iteration if the chunk is None, indicating the
+            # end of the audio stream.
+            chunk = self._buff.get()
+            if chunk is None:
+                return
+            data = [chunk]
+
+            # Now consume whatever other data's still buffered.
+            while True:
+                try:
+                    chunk = self._buff.get(block=False)
+                    if chunk is None:
+                        return
+                    data.append(chunk)
+                except queue.Empty:
+                    break
+
+            yield b''.join(data)
 
 
 if __name__ == '__main__':
-    wav_file = r'/home/aki/Data/speech_dataset/left/a5d485dc_nohash_0.wav'
+    RATE = 16000
+    # CHUNK = int(RATE / 10)  # 100ms
+    CHUNK = 1024
+    # with MicrophoneStream(RATE, CHUNK) as stream:
+    #    audio_generator = stream.generator()
+    FORMAT = pyaudio.paInt16
+    RECORD_SECONDS = 3
+    INPUT_DEVICE_INDEX = 7
+    CHANNELS = 1
+
+    pa = pyaudio.PyAudio()
+    stream = pa.open(
+        rate=RATE,
+        channels=CHANNELS,
+        format=FORMAT,
+        input=True,
+        frames_per_buffer=CHUNK,
+        input_device_index=INPUT_DEVICE_INDEX)
+
+    frames = []
+    #while stream.is_active():
+    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+        pcm = stream.read(CHUNK)
+        #pcm = struct.unpack_from("h" * CHUNK, pcm)
+        #frames.extend(list(pcm))
+        frames.append(pcm)
+
+    stream.stop_stream()
+    stream.close()
+    pa.terminate()
+
+    WAVE_OUTPUT_FILENAME = 'sample.wav'
+    waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    waveFile.setnchannels(CHANNELS)
+    waveFile.setsampwidth(pa.get_sample_size(FORMAT))
+    waveFile.setframerate(RATE)
+    waveFile.writeframes(b''.join(frames))
+    waveFile.close()
 
     cr = CommandRecognizer(default.labels_txt, default.graph_pb)
-    cr.label_wav_file(wav_file)
+    cr.label_wav_file(WAVE_OUTPUT_FILENAME)
     print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
+
