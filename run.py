@@ -24,10 +24,6 @@ class CommandRecognizer:
         load_graph(graph_pb)
 
         # pyaudio settings.
-
-        #RECORD_SECONDS = 3
-        #INPUT_DEVICE_INDEX = 7
-
         self._rate     = 16000
         self._chunk    = 1024
         self._format   = pyaudio.paInt16
@@ -42,8 +38,8 @@ class CommandRecognizer:
         self.ranking = []
 
         # Create a thread-safe buffer of audio data
-        self._buff = queue.Queue()
-        self.closed = True
+        #self._buff = queue.Queue()
+        #self.closed = True
 
 
     def show_audio_devices_info(self):
@@ -83,7 +79,7 @@ class CommandRecognizer:
     def save_to_wav(self, frames, wav_file):
         waveFile = wave.open(wav_file, 'wb')
         waveFile.setnchannels(self._channels)
-        waveFile.setsampwidth(pa.get_sample_size(self._format))
+        waveFile.setsampwidth(self._audio_interface.get_sample_size(self._format))
         waveFile.setframerate(self._rate)
         waveFile.writeframes(b''.join(frames))
         waveFile.close()
@@ -92,7 +88,7 @@ class CommandRecognizer:
     def buf2pcm(self, buf):
         pcm = []
         for i in buf:
-            pcm_ = struct.unpack_from("h" * CHUNK, i)
+            pcm_ = struct.unpack_from("h" * self._chunk, i)
             pcm.extend(list(pcm_))
         return pcm
 
@@ -138,93 +134,44 @@ class CommandRecognizer:
         os.remove(wav_file.name)
 
 
-class MicrophoneStream(object):
-
-    def __enter__(self):
+    def open_audio_stream(self, input_device_index):
         self._audio_interface = pyaudio.PyAudio()
-        self._audio_stream = self._audio_interface.open(
-            format=pyaudio.paInt16,
-            # The API currently only supports 1-channel (mono) audio
-            # https://goo.gl/z757pE
-            channels=1, rate=self._rate,
-            input=True, frames_per_buffer=self._chunk,
-            # Run the audio stream asynchronously to fill the buffer object.
-            # This is necessary so that the input device's buffer doesn't
-            # overflow while the calling thread makes network requests, etc.
-            stream_callback=self._fill_buffer,
-        )
+        audio_stream = self._audio_interface.open(
+            rate=self._rate,
+            channels=self._channels,
+            format=self._format,
+            input=True,
+            frames_per_buffer=self._chunk,
+            input_device_index=input_device_index)
+        return audio_stream
 
-        self.closed = False
 
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self._audio_stream.stop_stream()
-        self._audio_stream.close()
-        self.closed = True
+    def close_audio_stream(self, audio_stream):
+        audio_stream.stop_stream()
+        audio_stream.close()
+        #self.closed = True
         # Signal the generator to terminate so that the client's
         # streaming_recognize method will not block the process termination.
-        self._buff.put(None)
+        #self._buff.put(None)
         self._audio_interface.terminate()
 
-    def _fill_buffer(self, in_data, frame_count, time_info, status_flags):
-        """Continuously collect data from the audio stream, into the buffer."""
-        self._buff.put(in_data)
-        return None, pyaudio.paContinue
 
-    def generator(self):
-        while not self.closed:
-            # Use a blocking get() to ensure there's at least one chunk of
-            # data, and stop iteration if the chunk is None, indicating the
-            # end of the audio stream.
-            chunk = self._buff.get()
-            if chunk is None:
-                return
-            data = [chunk]
-
-            # Now consume whatever other data's still buffered.
-            while True:
-                try:
-                    chunk = self._buff.get(block=False)
-                    if chunk is None:
-                        return
-                    data.append(chunk)
-                except queue.Empty:
-                    break
-
-            yield b''.join(data)
+    def record_audio(self, audio_stream, record_seconds):
+        buf = []
+        for i in range(0, int(self._rate / self._chunk * record_seconds)):
+            buf_ = audio_stream.read(self._chunk, exception_on_overflow=False)
+            buf.append(buf_)
+        return buf
 
 
 if __name__ == '__main__':
     cr = CommandRecognizer(default.labels_txt, default.graph_pb)
+    audio_stream = cr.open_audio_stream(default.input_device_index)
 
-    RATE = 16000
-    CHUNK = 1024
-    FORMAT = pyaudio.paInt16
-    RECORD_SECONDS = 2
-    INPUT_DEVICE_INDEX = 6
-    CHANNELS = 1
+    while audio_stream.is_active():
+        print('listening...')
+        buf = cr.record_audio(audio_stream, default.record_seconds)
+        cr.label_buf(buf)
+        print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
 
-    pa = pyaudio.PyAudio()
-    stream = pa.open(
-        rate=RATE,
-        channels=CHANNELS,
-        format=FORMAT,
-        input=True,
-        frames_per_buffer=CHUNK,
-        input_device_index=INPUT_DEVICE_INDEX)
-
-    print('recording...')
-
-    #while stream.is_active():
-    buf = []
-    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-        buf_ = stream.read(CHUNK)
-        buf.append(buf_)
-
-    stream.stop_stream()
-    stream.close()
-    pa.terminate()
-
-    cr.label_buf(buf)
-    print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
+    cr.close_audio_stream(audio_stream)
