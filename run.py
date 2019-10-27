@@ -1,6 +1,6 @@
 import os
 import sys
-#import struct
+import struct
 import wave
 
 import tensorflow as tf
@@ -21,6 +21,16 @@ class CommandRecognizer:
         # load graph, which is stored in the default session
         load_graph(graph_pb)
 
+        # pyaudio settings.
+
+        #RECORD_SECONDS = 3
+        #INPUT_DEVICE_INDEX = 7
+
+        self._rate     = 16000
+        self._chunk    = 1024
+        self._format   = pyaudio.paInt16
+        self._channels = 1
+
         # copied from temsorflow/examples/command_recognition/label_wav.py
         self.input_layer_name  = 'wav_data:0'
         self.output_layer_name = 'labels_softmax:0'
@@ -28,6 +38,10 @@ class CommandRecognizer:
         # initialize variables.
         self.predictions = []
         self.ranking = []
+
+        # Create a thread-safe buffer of audio data
+        self._buff = queue.Queue()
+        self.closed = True
 
 
     def show_audio_devices_info(self):
@@ -64,15 +78,16 @@ class CommandRecognizer:
             self.predict_labels(wav_data)
 
 
-class MicrophoneStream(object):
-    """Opens a recording stream as a generator yielding the audio chunks."""
-    def __init__(self, rate, chunk):
-        self._rate = rate
-        self._chunk = chunk
+    def save_to_wav(self, frames, wav_file):
+        waveFile = wave.open(wav_file, 'wb')
+        waveFile.setnchannels(self._channels)
+        waveFile.setsampwidth(pa.get_sample_size(self._format))
+        waveFile.setframerate(self._rate)
+        waveFile.writeframes(b''.join(frames))
+        waveFile.close()
 
-        # Create a thread-safe buffer of audio data
-        self._buff = queue.Queue()
-        self.closed = True
+
+class MicrophoneStream(object):
 
     def __enter__(self):
         self._audio_interface = pyaudio.PyAudio()
@@ -130,13 +145,15 @@ class MicrophoneStream(object):
 
 
 if __name__ == '__main__':
+    cr = CommandRecognizer(default.labels_txt, default.graph_pb)
+
     RATE = 16000
     # CHUNK = int(RATE / 10)  # 100ms
     CHUNK = 1024
     # with MicrophoneStream(RATE, CHUNK) as stream:
     #    audio_generator = stream.generator()
     FORMAT = pyaudio.paInt16
-    RECORD_SECONDS = 3
+    RECORD_SECONDS = 2
     INPUT_DEVICE_INDEX = 7
     CHANNELS = 1
 
@@ -149,27 +166,34 @@ if __name__ == '__main__':
         frames_per_buffer=CHUNK,
         input_device_index=INPUT_DEVICE_INDEX)
 
-    frames = []
+    print('recording...')
+
     #while stream.is_active():
+    frames = []
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         pcm = stream.read(CHUNK)
-        #pcm = struct.unpack_from("h" * CHUNK, pcm)
-        #frames.extend(list(pcm))
         frames.append(pcm)
 
     stream.stop_stream()
     stream.close()
     pa.terminate()
 
-    WAVE_OUTPUT_FILENAME = 'sample.wav'
-    waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-    waveFile.setnchannels(CHANNELS)
-    waveFile.setsampwidth(pa.get_sample_size(FORMAT))
-    waveFile.setframerate(RATE)
-    waveFile.writeframes(b''.join(frames))
-    waveFile.close()
+    # get amplitude of the signal.
+    pcm = []
+    for i in frames:
+        pcm_ = struct.unpack_from("h" * CHUNK, i)
+        pcm.extend(list(pcm_))
 
-    cr = CommandRecognizer(default.labels_txt, default.graph_pb)
-    cr.label_wav_file(WAVE_OUTPUT_FILENAME)
+    wav_file = 'sample.wav'
+    #wav_file = r'/home/aki/Data/speech_dataset/left/a5d485dc_nohash_0.wav'
+    cr.save_to_wav(frames, wav_file)
+
+    wav_file2 = 'sample2.wav'
+    CUT_SECONDS = 1
+    cut_points = RATE * CHANNELS * CUT_SECONDS
+    pcm2 = pcm[cut_points:cut_points*2]
+    frames2 = [struct.pack("h" * len(pcm2), *pcm2)]
+    cr.save_to_wav(frames2, wav_file2)
+
+    cr.label_wav_file(wav_file2)
     print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
-
