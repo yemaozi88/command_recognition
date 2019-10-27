@@ -2,6 +2,7 @@ import os
 import sys
 import struct
 import wave
+import tempfile
 
 import tensorflow as tf
 import pyaudio
@@ -114,6 +115,29 @@ class CommandRecognizer:
         return pcm[frame_start:frame_start+frame_size]
 
 
+    def label_buf(self, buf):
+        # convert buf into pcm (amplitude).
+        pcm  = self.buf2pcm(buf)
+
+        # Voice Activity Detection.
+        pcm2 = self.VAD(pcm)
+
+        # Voice Activity is converted back to buf.
+        buf2 = self.pcm2buf(pcm2)
+
+        # write buf to a wav file.
+        wav_file = tempfile.NamedTemporaryFile(delete=False)
+        wav_file.close()
+        self.save_to_wav(buf2, wav_file.name)
+
+        # recognize the wav file.
+        # TODO: save & load wav file may not needed.
+        self.label_wav_file(wav_file.name)
+
+        # remove temporary file.
+        os.remove(wav_file.name)
+
+
 class MicrophoneStream(object):
 
     def __enter__(self):
@@ -175,10 +199,7 @@ if __name__ == '__main__':
     cr = CommandRecognizer(default.labels_txt, default.graph_pb)
 
     RATE = 16000
-    # CHUNK = int(RATE / 10)  # 100ms
     CHUNK = 1024
-    # with MicrophoneStream(RATE, CHUNK) as stream:
-    #    audio_generator = stream.generator()
     FORMAT = pyaudio.paInt16
     RECORD_SECONDS = 2
     INPUT_DEVICE_INDEX = 6
@@ -205,16 +226,5 @@ if __name__ == '__main__':
     stream.close()
     pa.terminate()
 
-    # get amplitude of the signal.
-    pcm = cr.buf2pcm(buf)
-
-    #wav_file = 'sample.wav'
-    #wav_file = r'/home/aki/Data/speech_dataset/left/a5d485dc_nohash_0.wav'
-    #cr.save_to_wav(buf, wav_file)
-
-    wav_file2 = 'sample2.wav'
-    pcm2 = cr.VAD(pcm)
-    buf2 = cr.pcm2buf(pcm2)
-    cr.save_to_wav(buf2, wav_file2)
-    cr.label_wav_file(wav_file2)
+    cr.label_buf(buf)
     print('recognized as {}'.format(cr.labels[cr.ranking[0]]))

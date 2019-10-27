@@ -100,7 +100,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572212398524</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Recognition is performed to the extracted 1 sec of the recorded wav file.">
+      <created>1572214434030</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1572214434030</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -119,6 +126,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="An input from a microphone can be recognized." />
     <MESSAGE value="Only 1 sec is extracted from the recorded wav file." />
-    <option name="LAST_COMMIT_MESSAGE" value="Only 1 sec is extracted from the recorded wav file." />
+    <MESSAGE value="Recognition is performed to the extracted 1 sec of the recorded wav file." />
+    <option name="LAST_COMMIT_MESSAGE" value="Recognition is performed to the extracted 1 sec of the recorded wav file." />
   </component>
 </project>
