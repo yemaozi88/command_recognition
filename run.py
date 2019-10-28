@@ -153,7 +153,7 @@ class CommandRecognizer:
         wav_file = tempfile.NamedTemporaryFile(delete=False)
         wav_file.close()
         self.save_to_wav(buf2, wav_file.name)
-        self.save_to_wav(buf2, 'sample2.wav')
+        #self.save_to_wav(buf2, 'sample2.wav')
 
         # recognize the wav file.
         # TODO: save & load wav file may not needed.
@@ -171,7 +171,7 @@ if __name__ == '__main__':
     while audio_stream.is_active():
         print('listening...')
         buf = cr.record_audio(audio_stream, default.record_seconds)
-        cr.save_to_wav(buf, 'sample.wav')
+        #cr.save_to_wav(buf, 'sample.wav')
         cr.label_buf(buf)
         print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
 
