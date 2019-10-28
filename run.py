@@ -103,6 +103,7 @@ class CommandRecognizer:
             pcm_ = np.array(pcm[i:i+frame_size])
             if np.mean(pcm_**2) > rms:
                 frame_start = i
+                rms = np.mean(pcm_**2)
 
         return pcm[frame_start:frame_start+frame_size]
 
@@ -152,6 +153,7 @@ class CommandRecognizer:
         wav_file = tempfile.NamedTemporaryFile(delete=False)
         wav_file.close()
         self.save_to_wav(buf2, wav_file.name)
+        self.save_to_wav(buf2, 'sample2.wav')
 
         # recognize the wav file.
         # TODO: save & load wav file may not needed.
@@ -169,6 +171,7 @@ if __name__ == '__main__':
     while audio_stream.is_active():
         print('listening...')
         buf = cr.record_audio(audio_stream, default.record_seconds)
+        cr.save_to_wav(buf, 'sample.wav')
         cr.label_buf(buf)
         print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
 
