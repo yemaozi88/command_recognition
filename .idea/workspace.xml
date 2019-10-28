@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defaultfiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/defaultfiles.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +128,21 @@
       <option name="project" value="LOCAL" />
       <updated>1572220232873</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="bug fix in VAD().">
+      <created>1572220936877</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1572220936877</updated>
+    </task>
+    <task id="LOCAL-00008" summary="wav files for debug are removed.">
+      <created>1572221059051</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1572221059051</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -151,6 +165,8 @@
     <MESSAGE value="function label_buf is made." />
     <MESSAGE value="recognition is performed to audio streaming." />
     <MESSAGE value="clearn up run.py." />
-    <option name="LAST_COMMIT_MESSAGE" value="clearn up run.py." />
+    <MESSAGE value="bug fix in VAD()." />
+    <MESSAGE value="wav files for debug are removed." />
+    <option name="LAST_COMMIT_MESSAGE" value="wav files for debug are removed." />
   </component>
 </project>
