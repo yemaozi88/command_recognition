@@ -187,7 +187,7 @@ if __name__ == '__main__':
         stdin, stdout, stderr = client.exec_command(
             'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
         print('sending command to the robot...')
-        sleep(10)
+        sleep(default.latency)
 
     # termination process.
     cr.close_audio_stream(audio_stream)

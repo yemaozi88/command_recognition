@@ -1,13 +1,22 @@
+import time
+
 import ev3dev.ev3 as ev3
 import argparse
+
+motorR = ev3.LargeMotor('outA')
+motorL = ev3.LargeMotor('outB')
 
 def execute_command(command):
     if command == 'go':
         ev3.Sound.speak('go forward.').wait()
+        #motorR.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
+        #motorL.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
     elif command == 'right':
-        ev3.Sound.speak('go right.').wait()
+        #ev3.Sound.speak('turn right.').wait()
+        motorL.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
     elif command == 'left':
-        ev3.Sound.speak('go left.').wait()
+        #ev3.Sound.speak('turn left.').wait()
+        motorR.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
     elif command == 'down':
         ev3.Sound.speak('go back.').wait()
     elif command == 'stop':

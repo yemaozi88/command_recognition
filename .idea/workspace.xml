@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defaultfiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/defaultfiles.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/execute_command.py" beforeDir="false" afterPath="$PROJECT_DIR$/execute_command.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/send_command.py" beforeDir="false" afterPath="$PROJECT_DIR$/send_command.py" afterDir="false" />
@@ -194,7 +195,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572364327273</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="voice command is sent to the robot and the robot repeats the command.">
+      <created>1572364987055</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1572364987055</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -226,6 +234,7 @@
     <MESSAGE value="execute_command function is made." />
     <MESSAGE value="go.py is removed." />
     <MESSAGE value="execute_command test." />
-    <option name="LAST_COMMIT_MESSAGE" value="execute_command test." />
+    <MESSAGE value="voice command is sent to the robot and the robot repeats the command." />
+    <option name="LAST_COMMIT_MESSAGE" value="voice command is sent to the robot and the robot repeats the command." />
   </component>
 </project>
