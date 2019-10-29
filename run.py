@@ -3,8 +3,10 @@ import sys
 import wave
 import struct
 import tempfile
+from time import sleep
 
 import pyaudio
+import paramiko
 import numpy as np
 import tensorflow as tf
 
@@ -168,11 +170,25 @@ if __name__ == '__main__':
     cr = CommandRecognizer(default.labels_txt, default.graph_pb)
     audio_stream = cr.open_audio_stream(default.input_device_index)
 
+    # open SSH client.
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.WarningPolicy())
+    client.connect('ev3dev.local', username='robot', password='maker')
+
+    # listening command.
     while audio_stream.is_active():
+        print('==========')
         print('listening...')
         buf = cr.record_audio(audio_stream, default.record_seconds)
         #cr.save_to_wav(buf, 'sample.wav')
         cr.label_buf(buf)
-        print('recognized as {}'.format(cr.labels[cr.ranking[0]]))
+        command = cr.labels[cr.ranking[0]]
+        print('recognized as {}'.format(command))
+        stdin, stdout, stderr = client.exec_command(
+            'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
+        print('sending command to the robot...')
+        sleep(10)
 
+    # termination process.
     cr.close_audio_stream(audio_stream)
+    client.close()
