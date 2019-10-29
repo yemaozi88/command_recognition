@@ -3,8 +3,8 @@ import time
 import ev3dev.ev3 as ev3
 import argparse
 
-motorR = ev3.LargeMotor('outA')
-motorL = ev3.LargeMotor('outB')
+motorR = ev3.LargeMotor('outB')
+motorL = ev3.LargeMotor('outC')
 
 def execute_command(command):
     if command == 'go':

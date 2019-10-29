@@ -203,7 +203,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572383096605</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="lines related to ssh are back.">
+      <created>1572383253405</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1572383253405</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -237,6 +244,7 @@
     <MESSAGE value="execute_command test." />
     <MESSAGE value="voice command is sent to the robot and the robot repeats the command." />
     <MESSAGE value="some sampling rates are not accepted depending on a microphone. Therefore first record audio in required sampling rate, then downsample it to 16k. Because sox requires to know the file format, file name is hardcoded instead of using Tempfile." />
-    <option name="LAST_COMMIT_MESSAGE" value="some sampling rates are not accepted depending on a microphone. Therefore first record audio in required sampling rate, then downsample it to 16k. Because sox requires to know the file format, file name is hardcoded instead of using Tempfile." />
+    <MESSAGE value="lines related to ssh are back." />
+    <option name="LAST_COMMIT_MESSAGE" value="lines related to ssh are back." />
   </component>
 </project>
