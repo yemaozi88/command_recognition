@@ -10,4 +10,5 @@ if __name__ == '__main__':
     parser.add_argument(
         '--command', type=str, default='', help='command received.')
     args = parser.parse_args()
-    print('command: '+args.command)
+    #print('command: ' + args.command)
+    execute_command(args.command)
