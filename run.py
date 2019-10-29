@@ -2,7 +2,6 @@ import os
 import sys
 import wave
 import struct
-import tempfile
 from time import sleep
 
 import pyaudio
@@ -40,6 +39,10 @@ class CommandRecognizer:
         #self._buff = queue.Queue()
         #self.closed = True
 
+        # temporary files.
+        self._wav_file     = 'input.wav'
+        self._wav_file_16k = 'input_16k.wav'
+
 
     def show_audio_devices_info(self):
         """ Provides information regarding different audio devices available.
@@ -49,14 +52,32 @@ class CommandRecognizer:
         pa = pyaudio.PyAudio()
         for i in range(pa.get_device_count()):
             info = pa.get_device_info_by_index(i)
+            #info = pa.get_device_info_by_host_api_device_index(i)
             print('{0:2}: {1}'.format(info['index'], info['name']))
         pa.terminate()
+
+
+    def check_supported_sample_rate(self):
+        import sounddevice as sd
+        samplerates = 16000, 32000, 44100, 48000, 96000
+        supported_samplerates = []
+        for fs in samplerates:
+            try:
+                sd.check_output_settings(device=default.input_device_index, samplerate=fs)
+            except Exception as e:
+                #print(fs, e)
+                pass
+            else:
+                supported_samplerates.append(fs)
+        #print(supported_samplerates)
+        return supported_samplerates
 
 
     def open_audio_stream(self, input_device_index):
         self._audio_interface = pyaudio.PyAudio()
         audio_stream = self._audio_interface.open(
-            rate=self._rate,
+            #rate=self._rate,
+            rate=default.input_device_rate,
             channels=self._channels,
             format=self._format,
             input=True,
@@ -65,19 +86,9 @@ class CommandRecognizer:
         return audio_stream
 
 
-    def close_audio_stream(self, audio_stream):
-        audio_stream.stop_stream()
-        audio_stream.close()
-        #self.closed = True
-        # Signal the generator to terminate so that the client's
-        # streaming_recognize method will not block the process termination.
-        #self._buff.put(None)
-        self._audio_interface.terminate()
-
-
     def record_audio(self, audio_stream, record_seconds):
         buf = []
-        for i in range(0, int(self._rate / self._chunk * record_seconds)):
+        for i in range(0, int(default.input_device_rate / self._chunk * record_seconds)):
             buf_ = audio_stream.read(self._chunk, exception_on_overflow=False)
             buf.append(buf_)
         return buf
@@ -96,7 +107,7 @@ class CommandRecognizer:
 
 
     def VAD(self, pcm, frame_seconds=1, shift_seconds=0.01):
-        frame_size = self._rate * self._channels * frame_seconds
+        frame_size = default.input_device_rate * self._channels * frame_seconds
         shift_size = int(frame_size * shift_seconds / frame_seconds)
 
         frame_start = 0
@@ -136,9 +147,13 @@ class CommandRecognizer:
         waveFile = wave.open(wav_file, 'wb')
         waveFile.setnchannels(self._channels)
         waveFile.setsampwidth(self._audio_interface.get_sample_size(self._format))
-        waveFile.setframerate(self._rate)
+        waveFile.setframerate(default.input_device_rate)
         waveFile.writeframes(b''.join(frames))
         waveFile.close()
+
+
+    def downsample(self, input_wav, output_wav):
+        os.system('sox ' + input_wav + ' -r ' + str(self._rate) + ' ' + output_wav)
 
 
     def label_buf(self, buf):
@@ -152,43 +167,64 @@ class CommandRecognizer:
         buf2 = self.pcm2buf(pcm2)
 
         # write buf to a wav file.
-        wav_file = tempfile.NamedTemporaryFile(delete=False)
-        wav_file.close()
-        self.save_to_wav(buf2, wav_file.name)
-        #self.save_to_wav(buf2, 'sample2.wav')
+        self.save_to_wav(buf2, self._wav_file)
+
+        # downsampling.
+        self.downsample(self._wav_file, self._wav_file_16k)
 
         # recognize the wav file.
         # TODO: save & load wav file may not needed.
-        self.label_wav_file(wav_file.name)
+        self.label_wav_file(self._wav_file_16k)
+
+
+    def close(self, audio_stream):
+        audio_stream.stop_stream()
+        audio_stream.close()
+        # self.closed = True
+        # Signal the generator to terminate so that the client's
+        # streaming_recognize method will not block the process termination.
+        # self._buff.put(None)
+        self._audio_interface.terminate()
 
         # remove temporary file.
-        os.remove(wav_file.name)
+        os.remove(self._wav_file)
+        os.remove(self._wav_file_16k)
 
 
 
 if __name__ == '__main__':
     cr = CommandRecognizer(default.labels_txt, default.graph_pb)
+
+    # check sound device.
+    print('[List of Input Devices]')
+    cr.show_audio_devices_info()
+    print('\n')
+    print('>>> device {} is chosen as an input device.'.format(default.input_device_index))
+    print('[Device Info]')
+    pa = pyaudio.PyAudio()
+    print(pa.get_device_info_by_index(default.input_device_index))
+
     audio_stream = cr.open_audio_stream(default.input_device_index)
 
     # open SSH client.
-    client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.WarningPolicy())
-    client.connect('ev3dev.local', username='robot', password='maker')
+    #client = paramiko.SSHClient()
+    #client.set_missing_host_key_policy(paramiko.WarningPolicy())
+    #client.connect('ev3dev.local', username='robot', password='maker')
 
     # listening command.
     while audio_stream.is_active():
         print('==========')
-        print('listening...')
+        print('>>> listening...')
         buf = cr.record_audio(audio_stream, default.record_seconds)
-        #cr.save_to_wav(buf, 'sample.wav')
+        cr.save_to_wav(buf, 'sample.wav')
         cr.label_buf(buf)
         command = cr.labels[cr.ranking[0]]
-        print('recognized as {}'.format(command))
-        stdin, stdout, stderr = client.exec_command(
-            'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
-        print('sending command to the robot...')
-        sleep(default.latency)
+        print('>>> recognized as {}'.format(command))
+        #stdin, stdout, stderr = client.exec_command(
+        #    'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
+        #print('sending command to the robot...')
+        #sleep(default.latency)
 
     # termination process.
-    cr.close_audio_stream(audio_stream)
-    client.close()
+    cr.close(audio_stream)
+    #client.close()

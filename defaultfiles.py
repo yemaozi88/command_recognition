@@ -8,4 +8,5 @@ graph_pb   = os.path.join(model_dir, 'my_frozen_graph.pb')
 
 record_seconds = 3
 input_device_index = 6
-latency = 12
+input_device_rate = 44100
+latency = 1
