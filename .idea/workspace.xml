@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/receive_command.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/send_command.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defaultfiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/defaultfiles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/receive_command.py" beforeDir="false" afterPath="$PROJECT_DIR$/receive_command.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -159,7 +157,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572297634587</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Test paramiko.">
+      <created>1572361995904</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1572361995904</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -186,6 +191,7 @@
     <MESSAGE value="wav files for debug are removed." />
     <MESSAGE value="The model trained for only 5 commands (right, left, go, down, stop) is added." />
     <MESSAGE value="Set input_device_index for ev3dev." />
-    <option name="LAST_COMMIT_MESSAGE" value="Set input_device_index for ev3dev." />
+    <MESSAGE value="Test paramiko." />
+    <option name="LAST_COMMIT_MESSAGE" value="Test paramiko." />
   </component>
 </project>
