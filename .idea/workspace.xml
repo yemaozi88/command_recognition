@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/execute_command.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/receive_command.py" beforeDir="false" afterPath="$PROJECT_DIR$/receive_command.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/defaultfiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/defaultfiles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/receive_command.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/send_command.py" beforeDir="false" afterPath="$PROJECT_DIR$/send_command.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -164,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572361995904</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="ev3dev test program is added.">
+      <created>1572362888222</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1572362888222</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -192,6 +203,7 @@
     <MESSAGE value="The model trained for only 5 commands (right, left, go, down, stop) is added." />
     <MESSAGE value="Set input_device_index for ev3dev." />
     <MESSAGE value="Test paramiko." />
-    <option name="LAST_COMMIT_MESSAGE" value="Test paramiko." />
+    <MESSAGE value="ev3dev test program is added." />
+    <option name="LAST_COMMIT_MESSAGE" value="ev3dev test program is added." />
   </component>
 </project>
