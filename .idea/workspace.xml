@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/defaultfiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/defaultfiles.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
-    </list>
+    <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +196,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572364987055</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="some sampling rates are not accepted depending on a microphone. Therefore first record audio in required sampling rate, then downsample it to 16k. Because sox requires to know the file format, file name is hardcoded instead of using Tempfile.">
+      <created>1572383096605</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1572383096605</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -233,6 +236,7 @@
     <MESSAGE value="go.py is removed." />
     <MESSAGE value="execute_command test." />
     <MESSAGE value="voice command is sent to the robot and the robot repeats the command." />
-    <option name="LAST_COMMIT_MESSAGE" value="voice command is sent to the robot and the robot repeats the command." />
+    <MESSAGE value="some sampling rates are not accepted depending on a microphone. Therefore first record audio in required sampling rate, then downsample it to 16k. Because sox requires to know the file format, file name is hardcoded instead of using Tempfile." />
+    <option name="LAST_COMMIT_MESSAGE" value="some sampling rates are not accepted depending on a microphone. Therefore first record audio in required sampling rate, then downsample it to 16k. Because sox requires to know the file format, file name is hardcoded instead of using Tempfile." />
   </component>
 </project>

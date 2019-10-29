@@ -207,9 +207,9 @@ if __name__ == '__main__':
     audio_stream = cr.open_audio_stream(default.input_device_index)
 
     # open SSH client.
-    #client = paramiko.SSHClient()
-    #client.set_missing_host_key_policy(paramiko.WarningPolicy())
-    #client.connect('ev3dev.local', username='robot', password='maker')
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.WarningPolicy())
+    client.connect('ev3dev.local', username='robot', password='maker')
 
     # listening command.
     while audio_stream.is_active():
@@ -220,11 +220,12 @@ if __name__ == '__main__':
         cr.label_buf(buf)
         command = cr.labels[cr.ranking[0]]
         print('>>> recognized as {}'.format(command))
-        #stdin, stdout, stderr = client.exec_command(
-        #    'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
-        #print('sending command to the robot...')
-        #sleep(default.latency)
+
+        stdin, stdout, stderr = client.exec_command(
+            'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
+        print('sending command to the robot...')
+        sleep(default.latency)
 
     # termination process.
     cr.close(audio_stream)
-    #client.close()
+    client.close()
