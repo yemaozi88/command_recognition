@@ -248,7 +248,28 @@
       <option name="project" value="LOCAL" />
       <updated>1572563131596</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk.">
+      <created>1572563364492</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1572563364492</updated>
+    </task>
+    <task id="LOCAL-00025" summary="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk.">
+      <created>1572563459491</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1572563459491</updated>
+    </task>
+    <task id="LOCAL-00026" summary="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk.">
+      <created>1572563520862</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1572563520862</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
