@@ -4,7 +4,7 @@ import argparse
 import defaultfiles as default
 sys.path.append(default.ev3dev_lang_python_dir)
 import ev3dev2.motor as ev3motor
-import ev3dev2.sound as ev3sound
+import ev3dev2.sound.sound as ev3sound
 
 steer = ev3motor.MoveSteering(ev3motor.OUTPUT_B, ev3motor.OUTPUT_C)
 def execute_command(command):
