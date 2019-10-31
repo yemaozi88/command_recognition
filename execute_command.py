@@ -16,9 +16,9 @@ def execute_command(command):
     elif command == 'down':
         steer.on_for_rotations(0, ev3.SpeedPercent(default.speed_percent), -default.rotation)
     elif command == 'stop':
-        ev3.Sound.speak('stop.').wait()
+        ev3dev2.sound.speak('stop.').wait()
     else:
-        ev3.Sound.speak('no valid command received.').wait()
+        ev3dev2.sound.speak('no valid command received.').wait()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
