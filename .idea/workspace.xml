@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="" />
+    <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/execute_command.py" beforeDir="false" afterPath="$PROJECT_DIR$/execute_command.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,7 +241,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572562666186</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk.">
+      <created>1572563131596</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1572563131596</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -274,6 +284,7 @@
     <MESSAGE value="some sampling rates are not accepted depending on a microphone. Therefore first record audio in required sampling rate, then downsample it to 16k. Because sox requires to know the file format, file name is hardcoded instead of using Tempfile." />
     <MESSAGE value="lines related to ssh are back." />
     <MESSAGE value="robot car controll test." />
-    <option name="LAST_COMMIT_MESSAGE" value="robot car controll test." />
+    <MESSAGE value="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk." />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk." />
   </component>
 </project>
