@@ -7,6 +7,6 @@ labels_txt = os.path.join(model_dir, 'conv_labels.txt')
 graph_pb   = os.path.join(model_dir, 'my_frozen_graph.pb')
 
 record_seconds = 4
-input_device_index = 6
+input_device_index = 5
 input_device_rate = 44100
 latency = 12
