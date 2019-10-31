@@ -1,24 +1,20 @@
-import time
-
-import ev3dev.ev3 as ev3
+import sys
 import argparse
 
-motorR = ev3.LargeMotor('outB')
-motorL = ev3.LargeMotor('outC')
+import defaultfiles as default
+sys.path.append(default.ev3dev_lang_python_dir)
+import ev3dev2.motor as ev3
 
+steer = ev3.MoveSteering(ev3.OUTPUT_B, ev3.OUTPUT_C)
 def execute_command(command):
     if command == 'go':
-        ev3.Sound.speak('go forward.').wait()
-        #motorR.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
-        #motorL.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
+        steer.on_for_rotations(0, ev3.SpeedPercent(default.speed_percent), default.rotation)
     elif command == 'right':
-        #ev3.Sound.speak('turn right.').wait()
-        motorL.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
+        steer.on_for_rotations(100, ev3.SpeedPercent(default.speed_percent), default.rotation)
     elif command == 'left':
-        #ev3.Sound.speak('turn left.').wait()
-        motorR.run_to_rel_pos(position_sp=360, speed_sp=900, stop_action="hold")
+        steer.on_for_rotations(-100, ev3.SpeedPercent(default.speed_percent), default.rotation)
     elif command == 'down':
-        ev3.Sound.speak('go back.').wait()
+        steer.on_for_rotations(0, ev3.SpeedPercent(default.speed_percent), -default.rotation)
     elif command == 'stop':
         ev3.Sound.speak('stop.').wait()
     else:
