@@ -15,7 +15,7 @@ The codes are tested on Python 3.6 on Ubuntu 18.04.
 1. You will talk to a microphone attached to the laptop. 
 2. The input speech is recognized as one of "right", "left", "go", "down", "silence" or "unknown" by run.py on the laptop. 
 3. The recognized command is sent to the robot car. 
-4. The Lego car executes the command by execute_command.py.
+4. The LEGO car executes the command by execute_command.py.
 
 # How to set up
 ## The laptop
@@ -24,18 +24,23 @@ The codes are tested on Python 3.6 on Ubuntu 18.04.
 1. Clone this repository.
 1. Edit {command_recognition}/defaultfiles.py according to your environment.
 
-## The Lego Car
-The Lego Car only receives a command from the laptop. 
+## The LEGO Car
+The LEGO Car only receives a command from the laptop. 
 1. Following [the official instruction](https://www.ev3dev.org/docs/getting-started/), install ev3dev on the LEGO MINDSTORMS EV3 Intelligent Brick and set up network connection.
 1. To check if above step is completed, please [connect to ev3dev with SSH](https://www.ev3dev.org/docs/tutorials/connecting-to-ev3dev-with-ssh/). 
 1. Build a your favorite LEGO car. My husband made a [SUP3R car](https://www.smallrobots.it/introducing-the-sup3r-car/) for me. Be careful about the position of the WiFi dongle.
 1. Clone this repository.
 1. Edit {command_recognition}/defaultfiles.py according to your environment.
 
+## control the LEGO car with your voice!
 Now everything is ready. Please execute run.py on your laptop.
-When you see "listening..." please give commands to the Lego car! 
+When you see "listening..." please give commands to the LEGO car! 
 
-# Please let us know your ideas.
+# Customize the model
+The command recognition model ({command_recognition}/model) is trained using [simple audio recognition](https://github.com/tensorflow/docs/blob/master/site/en/r1/tutorials/sequences/audio_recognition.md).
+If you want to add your own command, please follow the above instruction and update the model.
+
+# Please let us know your ideas!
 This is a preliminary project.
 We plan to improve the codes in future. 
 If you have questions, opinions or ideas, please let us know (<428968@gmail.com>)! 
