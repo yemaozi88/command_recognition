@@ -11,6 +11,7 @@ import tensorflow as tf
 
 import defaultfiles as default
 sys.path.append(default.tensorflow_examples_speech_commands_dir)
+print(default.tensorflow_examples_speech_commands_dir)
 from label_wav import load_graph, load_labels
 
 
