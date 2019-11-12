@@ -37,7 +37,7 @@ Now everything is ready. Please execute run.py on your laptop.
 When you see "listening..." please give commands to the LEGO car! 
 
 # Customize the model
-The command recognition model ({command_recognition}/model) is trained using [simple audio recognition](https://github.com/tensorflow/docs/blob/master/site/en/r1/tutorials/sequences/audio_recognition.md).
+The command recognition model ({command_recognition}/model) is trained using [simple audio recognition] by TensorFlow (https://github.com/tensorflow/docs/blob/master/site/en/r1/tutorials/sequences/audio_recognition.md).
 If you want to add your own command, please follow the above instruction and update the model.
 
 # Please let us know your ideas!
