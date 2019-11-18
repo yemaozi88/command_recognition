@@ -1,10 +1,12 @@
 import sys
 import argparse
+import socket
+
+import ev3dev2.motor as ev3
+from ev3dev2.sound import Sound
 
 import defaultfiles as default
 sys.path.append(default.ev3dev_lang_python_dir)
-import ev3dev2.motor as ev3
-from ev3dev2.sound import Sound
 
 steer = ev3.MoveSteering(ev3.OUTPUT_B, ev3.OUTPUT_C)
 sound = Sound()

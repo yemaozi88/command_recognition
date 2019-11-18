@@ -223,7 +223,8 @@ if __name__ == '__main__':
         print('>>> recognized as {}'.format(command))
 
         stdin, stdout, stderr = client.exec_command(
-            'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
+            #'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
+            'touch ' + default.command_recognition_dir + '/' + command)
         print('sending command to the robot...')
         sleep(default.latency)
 

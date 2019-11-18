@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/initialize.py" afterDir="false" />
+    <list default="true" id="59c7948c-77fa-4310-9828-a6006a0707fc" name="Default Changelist" comment="separate initialize part in execute_command.py.">
+      <change afterPath="$PROJECT_DIR$/socket_client.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/socket_server.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/input.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/input_16k.wav" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sample.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/defaultfiles.py" beforeDir="false" afterPath="$PROJECT_DIR$/defaultfiles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/execute_command.py" beforeDir="false" afterPath="$PROJECT_DIR$/execute_command.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,7 +26,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1S19EdocktSa584W2fY18t6wypa" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -277,7 +280,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572563520862</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="separate initialize part in execute_command.py.">
+      <created>1573767776769</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1573767776769</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,6 +324,7 @@
     <MESSAGE value="lines related to ssh are back." />
     <MESSAGE value="robot car controll test." />
     <MESSAGE value="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed ev3dev.motor is used instead of ev3dev.sound when the robot should talk." />
+    <MESSAGE value="separate initialize part in execute_command.py." />
+    <option name="LAST_COMMIT_MESSAGE" value="separate initialize part in execute_command.py." />
   </component>
 </project>
