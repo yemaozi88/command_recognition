@@ -229,7 +229,7 @@ if __name__ == '__main__':
     #        'touch ' + default.command_recognition_dir + '/' + command)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((default.host, default.port))
-            s.sendall(bytes(command))
+            s.sendall(bytes(command, 'utf-8'))
 
         sleep(default.latency)
 
