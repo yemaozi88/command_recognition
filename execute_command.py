@@ -41,6 +41,6 @@ if __name__ == '__main__':
             print('Connected by', addr)
             while True:
                 command = conn.recv(1024)
-                if not command:
-                    break
+                #if not command:
+                #    break
                 print(str(command))
