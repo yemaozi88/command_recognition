@@ -6,7 +6,6 @@ from time import sleep
 import socket
 
 import pyaudio
-import paramiko
 import numpy as np
 import tensorflow as tf
 
@@ -208,11 +207,6 @@ if __name__ == '__main__':
 
     audio_stream = cr.open_audio_stream(default.input_device_index)
 
-    # open SSH client.
-    #client = paramiko.SSHClient()
-    #client.set_missing_host_key_policy(paramiko.WarningPolicy())
-    #client.connect('ev3dev.local', username='robot', password='maker')
-
     # listening command.
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((default.host, default.port))
@@ -226,13 +220,9 @@ if __name__ == '__main__':
             print('>>> recognized as {}'.format(command))
 
             print('sending command to the robot...')
-        #    stdin, stdout, stderr = client.exec_command(
-                #'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
-        #        'touch ' + default.command_recognition_dir + '/' + command)
             s.sendall(bytes(command, 'utf-8'))
 
         sleep(default.latency)
 
     # termination process.
     cr.close(audio_stream)
-    #client.close()
