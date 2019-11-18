@@ -215,20 +215,21 @@ if __name__ == '__main__':
 
     # listening command.
     while audio_stream.is_active():
-        print('==========')
-        print('>>> listening...')
-        buf = cr.record_audio(audio_stream, default.record_seconds)
-        cr.save_to_wav(buf, 'sample.wav')
-        cr.label_buf(buf)
-        command = cr.labels[cr.ranking[0]]
-        print('>>> recognized as {}'.format(command))
-
-        print('sending command to the robot...')
-    #    stdin, stdout, stderr = client.exec_command(
-            #'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
-    #        'touch ' + default.command_recognition_dir + '/' + command)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((default.host, default.port))
+
+            print('==========')
+            print('>>> listening...')
+            buf = cr.record_audio(audio_stream, default.record_seconds)
+            cr.save_to_wav(buf, 'sample.wav')
+            cr.label_buf(buf)
+            command = cr.labels[cr.ranking[0]]
+            print('>>> recognized as {}'.format(command))
+
+            print('sending command to the robot...')
+        #    stdin, stdout, stderr = client.exec_command(
+                #'python3 /home/robot/command_recognition/execute_command.py --command ' + command)
+        #        'touch ' + default.command_recognition_dir + '/' + command)
             s.sendall(bytes(command, 'utf-8'))
 
         sleep(default.latency)
