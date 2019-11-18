@@ -40,6 +40,8 @@ if __name__ == '__main__':
         with conn:
             print('Connected by', addr)
             while True:
-                command = conn.recv(1024)
-                if not command == b'':
-                    print(str(command))
+                command_ = conn.recv(1024)
+                if not command_ == b'':
+                    command = str(command_)
+                    print('Received command: {}'.format(command))
+                    execute_command(command)
