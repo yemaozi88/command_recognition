@@ -16,3 +16,7 @@ ev3dev_lang_python_dir  = r'/home/robot/ev3dev_lang_python'
 command_recognition_dir = r'/home/robot/command_recognition/tmp'
 speed_percent = 50
 rotation = -3
+
+# socket
+host = 'ev3dev'  # The server's hostname or IP address
+port = 65432     # The port used by the server

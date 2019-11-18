@@ -26,9 +26,22 @@ def execute_command(command):
         sound.speak('no valid command received.').wait()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--command', type=str, default='', help='command received.')
-    args = parser.parse_args()
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument(
+    #    '--command', type=str, default='', help='command received.')
+    #args = parser.parse_args()
     #print('command: ' + args.command)
-    execute_command(args.command)
+    #execute_command(args.command)
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((default.host, default.port))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            print('Connected by', addr)
+            while True:
+                command = conn.recv(1024)
+                #if not command:
+                #    break
+                # conn.sendall(data)
+                print(str(command))
