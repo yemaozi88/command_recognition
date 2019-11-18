@@ -41,8 +41,8 @@ class CommandRecognizer:
         #self.closed = True
 
         # temporary files.
-        self._wav_file     = 'input.wav'
-        self._wav_file_16k = 'input_16k.wav'
+        self._wav_file     = 'tmp/input.wav'
+        self._wav_file_16k = 'tmp/input_16k.wav'
 
 
     def show_audio_devices_info(self):
@@ -214,7 +214,6 @@ if __name__ == '__main__':
             print('==========')
             print('>>> listening...')
             buf = cr.record_audio(audio_stream, default.record_seconds)
-            cr.save_to_wav(buf, 'sample.wav')
             cr.label_buf(buf)
             command = cr.labels[cr.ranking[0]]
             print('>>> recognized as {}'.format(command))
