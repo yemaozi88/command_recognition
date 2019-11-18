@@ -20,9 +20,9 @@ def execute_command(command):
     elif command == 'down':
         steer.on_for_rotations(0, ev3.SpeedPercent(default.speed_percent), -default.rotation)
     elif command == 'stop':
-        sound.speak('stop.')
+        sound.speak('stop')
     else:
-        sound.speak('no valid command received.')
+        sound.speak('no valid command received')
 
 if __name__ == '__main__':
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
