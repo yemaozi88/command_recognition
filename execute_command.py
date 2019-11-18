@@ -42,6 +42,6 @@ if __name__ == '__main__':
             while True:
                 command_ = conn.recv(1024)
                 if not command_ == b'':
-                    command = str(command_)
+                    command = command_.decode('utf-8')
                     print('Received command: {}'.format(command))
                     execute_command(command)
