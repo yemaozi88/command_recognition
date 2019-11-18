@@ -214,10 +214,9 @@ if __name__ == '__main__':
     #client.connect('ev3dev.local', username='robot', password='maker')
 
     # listening command.
-    while audio_stream.is_active():
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((default.host, default.port))
-
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((default.host, default.port))
+        while audio_stream.is_active():
             print('==========')
             print('>>> listening...')
             buf = cr.record_audio(audio_stream, default.record_seconds)
