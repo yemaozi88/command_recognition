@@ -19,7 +19,7 @@ The codes are tested on Python 3.6 on Ubuntu 18.04.
 
 # How to set up
 ## The laptop
-1. Install the following packages if not exist - Tensorflow, pyaudio and paramiko.
+1. Install the following packages if not exist - Tensorflow and pyaudio.
 1. Clone [Tensorflow](https://github.com/tensorflow/tensorflow).
 1. Clone this repository.
 1. Edit {command_recognition}/defaultfiles.py according to your environment.
