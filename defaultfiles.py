@@ -18,5 +18,5 @@ speed_percent = 50
 rotation = -3
 
 # socket
-host = 'ev3dev'  # The server's hostname or IP address
+host = 'ev3dev.local'  # The server's hostname or IP address
 port = 65432     # The port used by the server
